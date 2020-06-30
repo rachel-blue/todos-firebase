@@ -4,7 +4,6 @@ import { CLIENT_ID } from './config';
 const uiConfig = {
   signInSuccessUrl: '/',
   signInOptions: [
-    // TODO(developer): Remove the providers you don't need for your app.
     {
       provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
       // Required to enable ID token credentials for this provider.
