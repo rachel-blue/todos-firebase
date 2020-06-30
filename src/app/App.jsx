@@ -7,42 +7,45 @@ import {
 } from 'react-router-dom';
 import PageHome from '../components/pages/PageHome/PageHome';
 import PageSignIn from '../components/pages/PageSignIn/PageSignIn';
+import UserContextProvider from './UserContextProvider';
 
 function App() {
   return (
-    <BrowserRouter>
-      <div>
-        <nav>
-          <ul>
-            <li>
-              <NavLink
-                to="/"
-              >
-                Home
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/sign-in"
-              >
-                Sign In
-              </NavLink>
-            </li>
-          </ul>
-        </nav>
-      </div>
-      <Switch>
+    <UserContextProvider>
+      <BrowserRouter>
+        <div>
+          <nav>
+            <ul>
+              <li>
+                <NavLink
+                  to="/"
+                >
+                  Home
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/sign-in"
+                >
+                  Sign In
+                </NavLink>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <Switch>
 
-        <Route path="/sign-in">
-          <PageSignIn />
-        </Route>
+          <Route path="/sign-in">
+            <PageSignIn />
+          </Route>
 
-        <Route path="/">
-          <PageHome />
-        </Route>
+          <Route path="/">
+            <PageHome />
+          </Route>
 
-      </Switch>
-    </BrowserRouter>
+        </Switch>
+      </BrowserRouter>
+    </UserContextProvider>
   );
 }
 

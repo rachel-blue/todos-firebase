@@ -1,6 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import firebase from 'firebase';
 import { useHistory } from 'react-router-dom';
+import { UserContext } from '../../../app/UserContextProvider';
 
 function UserBtn() {
 // @TODO login/ logout functionality updated with onclick method
@@ -9,19 +10,16 @@ function UserBtn() {
 
   const history = useHistory();
   const [btn, setBtn] = useState();
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     // listens for user change and updates
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        localStorage.setItem('user', JSON.stringify(user));
-        setBtn('Log Out');
-      } else {
-        localStorage.removeItem('user');
-        setBtn('Sign In');
-      }
-    });
-  }, []);
+    if (user) {
+      setBtn('Log Out');
+    } else {
+      setBtn('Sign In');
+    }
+  }, [user]);
 
   const handleClick = () => {
     if (btn === 'Log Out') {
