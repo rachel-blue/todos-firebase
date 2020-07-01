@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import UserBtn from '../../organisms/UserBtn/UserBtn';
 import { UserContext } from '../../../app/UserContextProvider';
+import CreateBtn from '../../molecule/CreateBtn/CreateBtn';
 
 function PageHome() {
   const { user } = useContext(UserContext);
@@ -13,7 +13,6 @@ function PageHome() {
          */}
         <h1>This is the Home Page!</h1>
         <p>Sign in to start using To-Do lists</p>
-        <UserBtn />
       </div>
     );
   }
@@ -24,11 +23,7 @@ function PageHome() {
       // if no cards have been made yet, then a create card button should display here
       // actual cards made by the user should display here
       */}
-      <ul>
-        <li>thing one</li>
-        <li>thing two</li>
-        <li>the cat in the hat</li>
-      </ul>
+      <CreateBtn />
     </div>
   );
 }

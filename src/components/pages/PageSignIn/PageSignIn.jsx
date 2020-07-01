@@ -1,10 +1,6 @@
 import React, { useEffect } from 'react';
-import firebase from 'firebase';
-import * as firebaseui from 'firebaseui';
 import uiConfig from '../../../firebase/uiConfig';
-
-// Initialize the FirebaseUI Widget using Firebase.
-const ui = new firebaseui.auth.AuthUI(firebase.auth());
+import { ui } from '../../../firebase';
 
 function PageSignIn() {
   useEffect(() => {

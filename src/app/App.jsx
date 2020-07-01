@@ -8,6 +8,8 @@ import {
 import PageHome from '../components/pages/PageHome/PageHome';
 import PageSignIn from '../components/pages/PageSignIn/PageSignIn';
 import UserContextProvider from './UserContextProvider';
+import PageCreate from '../components/pages/PageCreate/PageCreate';
+import UserBtn from '../components/organisms/UserBtn/UserBtn';
 
 function App() {
   return (
@@ -24,11 +26,7 @@ function App() {
                 </NavLink>
               </li>
               <li>
-                <NavLink
-                  to="/sign-in"
-                >
-                  Sign In
-                </NavLink>
+                <UserBtn />
               </li>
             </ul>
           </nav>
@@ -37,6 +35,10 @@ function App() {
 
           <Route path="/sign-in">
             <PageSignIn />
+          </Route>
+
+          <Route path="/create">
+            <PageCreate />
           </Route>
 
           <Route path="/">
