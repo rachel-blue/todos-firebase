@@ -4,9 +4,11 @@ import firebase from 'firebase';
 // Get local storage value and replace default with it
 export const UserContext = React.createContext({});
 
+const defaultUser = JSON.parse(localStorage.getItem('user state'));
+
 // eslint-disable-next-line react/prop-types
 const UserContextProvider = ({ children }) => {
-  const [user, setUser] = useState();
+  const [user, setUser] = useState(defaultUser);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((userState) => {

@@ -1,9 +1,29 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { db } from '../../../firebase';
 import { UserContext } from '../../../app/UserContextProvider';
 import CreateBtn from '../../molecule/CreateBtn/CreateBtn';
 
 function PageHome() {
   const { user } = useContext(UserContext);
+  const [checklist, setChecklist] = useState([]);
+
+  const getData = async () => {
+    const response = await db
+      .collection('checklists')
+      .where('createdBy', '==', user.uid)
+      .get();
+
+    const lists = response.docs
+      .map((t) => ({
+        id: t.id,
+        ...t.data(),
+      }));
+    setChecklist(lists);
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   if (!user) {
     return (
@@ -19,11 +39,18 @@ function PageHome() {
   return (
     <div>
       <h1>This is the Home Page!</h1>
-      {/*
-      // if no cards have been made yet, then a create card button should display here
-      // actual cards made by the user should display here
-      */}
-      <CreateBtn />
+      {checklist.length <= 0
+        ? <CreateBtn />
+        : checklist.map((list) => (
+          <div key={list.id}>
+            <h2>{list.title}</h2>
+            <ul>
+              {list.items.map((i) => (
+                <li>{i}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
     </div>
   );
 }

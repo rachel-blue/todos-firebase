@@ -5,6 +5,7 @@ import { UserContext } from '../../../app/UserContextProvider';
 function PageCreate() {
   const { user } = useContext(UserContext);
   const [checklistTitle, setChecklistTitle] = useState('');
+  const [checklistItems, setChecklistItems] = useState([]);
   const [submitMessage, setSubmitMessage] = useState();
   const [alert, setAlert] = useState();
 
@@ -14,12 +15,14 @@ function PageCreate() {
     const todoData = {
       title: checklistTitle,
       createdBy: user.uid,
+      items: checklistItems,
     };
 
     db.collection('checklists')
       .add(todoData).then(() => {
         setSubmitMessage('document sent successfully');
         setAlert('alert-success');
+        setChecklistItems([]);
       }).catch((error) => {
         setSubmitMessage('Error adding document: ', error);
         setAlert('alert-danger');
