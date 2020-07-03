@@ -10,6 +10,7 @@ import PageSignIn from '../components/pages/PageSignIn/PageSignIn';
 import UserContextProvider from './UserContextProvider';
 import PageCreate from '../components/pages/PageCreate/PageCreate';
 import UserBtn from '../components/organisms/UserBtn/UserBtn';
+import PageChecklist from '../components/pages/PageChecklist/PageChecklist';
 
 function App() {
   return (
@@ -39,6 +40,10 @@ function App() {
 
           <Route path="/create">
             <PageCreate />
+          </Route>
+
+          <Route path="/checklists/:id">
+            <PageChecklist />
           </Route>
 
           <Route path="/">
