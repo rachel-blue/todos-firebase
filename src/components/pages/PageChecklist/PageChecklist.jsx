@@ -38,12 +38,13 @@ function PageChecklist() {
     const updateData = {
       title: checklistTitle,
       createdBy: user.uid,
-      items: list,
+      items: list.items,
     };
 
     await db.collection('checklists')
       .doc(id)
       .set(updateData);
+
   };
 
   const handleDelete = async (evt) => {
