@@ -5,7 +5,7 @@ import { UserContext } from '../../../app/UserContextProvider';
 function PageCreate() {
   const { user } = useContext(UserContext);
   const [checklistTitle, setChecklistTitle] = useState('');
-  const [checklistItems, setChecklistItems] = useState([]);
+  const [checklistItems, setChecklistItems] = useState([{ name: 'checklist item', key: 'uuid', value: false }]);
   const [submitMessage, setSubmitMessage] = useState();
   const [alert, setAlert] = useState();
 

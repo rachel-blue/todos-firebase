@@ -14,9 +14,9 @@ function PageChecklist() {
   const history = useHistory();
   const { id } = useParams();
 
-  const [list, setList] = useState();
-  const [checklistTitle, setChecklistTitle] = useState();
-  const [newChecklistItem, setNewChecklistItem] = useState();
+  const [list, setList] = useState([]);
+  const [checklistTitle, setChecklistTitle] = useState('');
+  const [newItem, setNewItem] = useState('');
 
   const getData = useCallback(
     async () => {
@@ -26,7 +26,7 @@ function PageChecklist() {
         .get();
 
       const listItems = response.data();
-      setList(listItems);
+      setList(listItems.items);
       setChecklistTitle(listItems.title);
     },
     [id],
@@ -38,13 +38,12 @@ function PageChecklist() {
     const updateData = {
       title: checklistTitle,
       createdBy: user.uid,
-      items: list.items,
+      items: list,
     };
 
     await db.collection('checklists')
       .doc(id)
       .set(updateData);
-
   };
 
   const handleDelete = async (evt) => {
@@ -55,6 +54,43 @@ function PageChecklist() {
       .delete();
 
     history.push('/');
+  };
+
+  const handleChange = (evt, index) => {
+    evt.preventDefault();
+
+    const newList = [...list];
+    newList[index].name = evt.target.value;
+    setList(newList);
+  };
+
+  const handleCheck = (evt, index) => {
+    const newList = [...list];
+    newList[index].value = evt.currentTarget.checked;
+    setList(newList);
+  };
+
+  const handleItemDelete = (evt, index) => {
+    evt.preventDefault();
+
+    const newList = [...list];
+    newList.splice(index, 1);
+    setList(newList);
+  };
+
+  const handleNew = (evt) => {
+    evt.preventDefault();
+
+    const newItemData = {
+      name: newItem,
+      key: 'uuid',
+      value: false,
+    };
+
+    console.log(newItem);
+    const newList = [...list];
+    newList.push(newItemData);
+    setList(newList);
   };
 
   useEffect(() => {
@@ -79,32 +115,48 @@ function PageChecklist() {
             }}
           />
         </h2>
-
         <ul>
-          {list.items.map((item) => (
-            <li>
+          {list.map((item, index) => (
+            <div key={item.key}>
               <input
-                value={item}
-                onChange={(evt) => {
-                  setList(evt.target.value);
-                }}
+                type="checkbox"
+                onChange={(evt) => handleCheck(evt, index)}
+                checked={item.value}
               />
-            </li>
+              <input
+                value={(item.name)}
+                onChange={(evt) => handleChange(evt, index)}
+              />
+              <button
+                type="button"
+                onClick={(evt) => handleItemDelete(evt, index, item)}
+              >
+                X
+              </button>
+            </div>
           ))}
-          <li>
-            <input
-              placeholder="new item"
-              value={newChecklistItem}
-              onChange={(evt) => {
-                setNewChecklistItem(evt.target.value);
-              }}
-            />
-          </li>
+          <div>
+            <form
+              onSubmit={(evt) => handleNew(evt)}
+            >
+              <input
+                placeholder="add new item"
+                value={newItem.name}
+                onChange={(evt) => setNewItem(evt.target.value)}
+              />
+              <button
+                type="submit"
+              >
+                +
+              </button>
+            </form>
+          </div>
         </ul>
         <button type="submit">
           Update
         </button>
       </form>
+
       <button
         type="button"
         onClick={handleDelete}
