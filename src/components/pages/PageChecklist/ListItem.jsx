@@ -1,26 +1,46 @@
-import React, { useState } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
-function ListItem(props) {
-  const [itemName, setItemName] = useState('');
-  const [done, setDone] = useState(false);
-  // const [newChecklistItem, setNewChecklistItem] = useState();
-
+function ListItem({
+  item,
+  index,
+  handleCheck,
+  handleChange,
+  handleItemDelete,
+}) {
   return (
-    <div>
+    <div key={item.key}>
       <input
         type="checkbox"
-        onChange={(evt) => setDone(evt.currentTarget.checked)}
-        checked={done}
+        onChange={(evt) => {
+          handleCheck(evt, index);
+        }}
+        checked={item.value}
       />
       <input
-        value={itemName}
-        // onChange={(evt) => {
-        //   evt.preventDefault();
-        //   setItemName(evt.target.value);
-        // }}
+        value={(item.name)}
+        onChange={(evt) => handleChange(evt, index)}
       />
+      <button
+        type="button"
+        onClick={(evt) => handleItemDelete(evt, index, item)}
+      >
+        X
+      </button>
     </div>
   );
 }
 
+ListItem.propTypes = {
+  item: PropTypes.shape({
+    key: PropTypes.string.isRequired,
+    value: PropTypes.bool.isRequired,
+    name: PropTypes.string.isRequired,
+  }),
+  index: PropTypes.number.isRequired,
+  handleCheck: PropTypes.func.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  handleItemDelete: PropTypes.func.isRequired,
+
+};
 export default ListItem;

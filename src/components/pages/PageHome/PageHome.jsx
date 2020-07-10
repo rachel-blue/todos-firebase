@@ -30,15 +30,15 @@ function PageHome() {
     [user.uid],
   );
 
-    const handleDelete = async (evt, index) => {
-      evt.preventDefault();
+  const handleDelete = async (evt, index) => {
+    evt.preventDefault();
 
-      await db.collection('checklists')
-        .doc(checklist[index].id)
-        .delete();
+    await db.collection('checklists')
+      .doc(checklist[index].id)
+      .delete();
 
-      getData();
-    };
+    getData();
+  };
 
   useEffect(() => {
     getData();

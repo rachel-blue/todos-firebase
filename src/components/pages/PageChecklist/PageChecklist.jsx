@@ -5,19 +5,34 @@ import React, {
   useState,
 } from 'react';
 import { useParams } from 'react-router-dom';
-import { useHistory } from 'react-router';
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '../../../firebase';
 import { UserContext } from '../../../app/UserContextProvider';
+import ListItem from './ListItem';
 
 function PageChecklist() {
   const { user } = useContext(UserContext);
-  const history = useHistory();
   const { id } = useParams();
 
   const [list, setList] = useState([]);
   const [checklistTitle, setChecklistTitle] = useState('');
   const [newItem, setNewItem] = useState('');
+  const [initValue, setInitValue] = useState(false);
+
+  const handleUpdate = useCallback(
+    async () => {
+      const updateData = {
+        title: checklistTitle,
+        createdBy: user.uid,
+        items: list,
+      };
+
+      await db.collection('checklists')
+        .doc(id)
+        .set(updateData);
+    },
+    [id, checklistTitle, list, user.uid],
+  );
 
   const getData = useCallback(
     async () => {
@@ -29,23 +44,10 @@ function PageChecklist() {
       const listItems = response.data();
       setList(listItems.items);
       setChecklistTitle(listItems.title);
+      setInitValue(true);
     },
     [id],
   );
-
-  const handleSubmit = async (evt) => {
-    evt.preventDefault();
-
-    const updateData = {
-      title: checklistTitle,
-      createdBy: user.uid,
-      items: list,
-    };
-
-    await db.collection('checklists')
-      .doc(id)
-      .set(updateData);
-  };
 
   const handleChange = (evt, index) => {
     evt.preventDefault();
@@ -86,7 +88,15 @@ function PageChecklist() {
 
   useEffect(() => {
     getData();
+
   }, [getData]);
+
+  useEffect(() => {
+    if (initValue === true) {
+      handleUpdate();
+    }
+
+  }, [handleUpdate, checklistTitle, list, list.value, initValue]);
 
   if (!list) {
     return (
@@ -95,58 +105,43 @@ function PageChecklist() {
   }
   return (
     <div>
-      <form
-        onSubmit={handleSubmit}
-      >
-        <h2>
+      <h2>
+        <input
+          value={checklistTitle}
+          onChange={(evt) => setChecklistTitle(evt.target.value)}
+        />
+      </h2>
+      <ul>
+        {list.map((item, index) => (
+          <ListItem
+            item={item}
+            index={index}
+            handleCheck={handleCheck}
+            handleChange={handleChange}
+            handleItemDelete={handleItemDelete}
+            key={item.key}
+          />
+        ))}
+        <form
+          onSubmit={(evt) => {
+            handleNew(evt);
+            setNewItem('');
+          }}
+        >
           <input
-            value={checklistTitle}
+            placeholder="add new item"
+            value={newItem.name}
             onChange={(evt) => {
-              setChecklistTitle(evt.target.value);
+              setNewItem(evt.target.value);
             }}
           />
-        </h2>
-        <ul>
-          {list.map((item, index) => (
-            <div key={item.key}>
-              <input
-                type="checkbox"
-                onChange={(evt) => handleCheck(evt, index)}
-                checked={item.value}
-              />
-              <input
-                value={(item.name)}
-                onChange={(evt) => handleChange(evt, index)}
-              />
-              <button
-                type="button"
-                onClick={(evt) => handleItemDelete(evt, index, item)}
-              >
-                X
-              </button>
-            </div>
-          ))}
-          <div>
-            <form
-              onSubmit={(evt) => handleNew(evt)}
-            >
-              <input
-                placeholder="add new item"
-                value={newItem.name}
-                onChange={(evt) => setNewItem(evt.target.value)}
-              />
-              <button
-                type="submit"
-              >
-                +
-              </button>
-            </form>
-          </div>
-        </ul>
-        <button type="submit">
-          Update
-        </button>
-      </form>
+          <button
+            type="submit"
+          >
+            +
+          </button>
+        </form>
+      </ul>
     </div>
   );
 }
