@@ -3,11 +3,13 @@ import { NavLink } from 'react-router-dom';
 
 function CreateBtn() {
   return (
-    <button type="button">
-      <NavLink to="/create">
-        Create New Checklist
-      </NavLink>
-    </button>
+    <div className="my-2 p-4">
+      <button type="button" className="px-3">
+        <NavLink to="/create">
+          <h2>+</h2>
+        </NavLink>
+      </button>
+    </div>
   );
 }
 

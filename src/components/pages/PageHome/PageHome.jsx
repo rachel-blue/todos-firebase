@@ -30,6 +30,16 @@ function PageHome() {
     [user.uid],
   );
 
+    const handleDelete = async (evt, index) => {
+      evt.preventDefault();
+
+      await db.collection('checklists')
+        .doc(checklist[index].id)
+        .delete();
+
+      getData();
+    };
+
   useEffect(() => {
     getData();
   }, [getData]);
@@ -47,9 +57,12 @@ function PageHome() {
   }
   return (
     <div className="row m-4">
+      <div className="col-12 align-content-between">
+        <CreateBtn />
+      </div>
       {checklist.length <= 0
-        ? <CreateBtn />
-        : checklist.map((list) => (
+        ? <p>Make a new checklist to get started!</p>
+        : checklist.map((list, index) => (
           <div className="col-sm-12 col-md-6 col-lg-4 col-xl-3">
             <Link to={`/checklists/${list.id}`}>
               <div
@@ -57,6 +70,12 @@ function PageHome() {
                 className="card my-2 p-4"
               >
                 <h2>{list.title}</h2>
+                <button
+                  type="button"
+                  onClick={(evt) => handleDelete(evt, index)}
+                >
+                  Delete
+                </button>
               </div>
             </Link>
           </div>

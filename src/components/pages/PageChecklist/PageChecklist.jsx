@@ -6,6 +6,7 @@ import React, {
 } from 'react';
 import { useParams } from 'react-router-dom';
 import { useHistory } from 'react-router';
+import { v4 as uuidv4 } from 'uuid';
 import { db } from '../../../firebase';
 import { UserContext } from '../../../app/UserContextProvider';
 
@@ -46,16 +47,6 @@ function PageChecklist() {
       .set(updateData);
   };
 
-  const handleDelete = async (evt) => {
-    evt.preventDefault();
-
-    await db.collection('checklists')
-      .doc(id)
-      .delete();
-
-    history.push('/');
-  };
-
   const handleChange = (evt, index) => {
     evt.preventDefault();
 
@@ -80,14 +71,14 @@ function PageChecklist() {
 
   const handleNew = (evt) => {
     evt.preventDefault();
+    const randomUuid = uuidv4();
 
     const newItemData = {
       name: newItem,
-      key: 'uuid',
+      key: randomUuid,
       value: false,
     };
 
-    console.log(newItem);
     const newList = [...list];
     newList.push(newItemData);
     setList(newList);
@@ -156,13 +147,6 @@ function PageChecklist() {
           Update
         </button>
       </form>
-
-      <button
-        type="button"
-        onClick={handleDelete}
-      >
-        Delete
-      </button>
     </div>
   );
 }

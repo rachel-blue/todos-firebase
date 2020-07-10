@@ -1,11 +1,13 @@
 import React, { useContext, useState } from 'react';
+import { useHistory } from 'react-router';
 import { db } from '../../../firebase';
 import { UserContext } from '../../../app/UserContextProvider';
 
 function PageCreate() {
   const { user } = useContext(UserContext);
+  const history = useHistory();
   const [checklistTitle, setChecklistTitle] = useState('');
-  const [checklistItems, setChecklistItems] = useState([{ name: 'checklist item', key: 'uuid', value: false }]);
+  const [checklistItems, setChecklistItems] = useState([{}]);
   const [submitMessage, setSubmitMessage] = useState();
   const [alert, setAlert] = useState();
 
@@ -27,6 +29,8 @@ function PageCreate() {
         setSubmitMessage('Error adding document: ', error);
         setAlert('alert-danger');
       });
+
+    history.push('/');
   };
   return (
     <div>
