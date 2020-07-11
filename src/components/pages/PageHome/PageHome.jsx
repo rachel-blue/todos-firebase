@@ -15,6 +15,9 @@ function PageHome() {
 
   const getData = useCallback(
     async () => {
+      if (!user) {
+        return;
+      }
       const response = await db
         .collection('checklists')
         .where('createdBy', '==', user.uid)
@@ -27,7 +30,7 @@ function PageHome() {
         }));
       setChecklist(lists);
     },
-    [user.uid],
+    [user],
   );
 
   const handleDelete = async (evt, index) => {

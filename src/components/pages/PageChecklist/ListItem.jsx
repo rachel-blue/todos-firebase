@@ -32,6 +32,7 @@ function ListItem({
 }
 
 ListItem.propTypes = {
+  // eslint-disable-next-line react/require-default-props
   item: PropTypes.shape({
     key: PropTypes.string.isRequired,
     value: PropTypes.bool.isRequired,
